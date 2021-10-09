@@ -1,0 +1,76 @@
+<html>
+  <head>
+    <script src="./fmPlayer_0.10.min.js"></script>    <!--  fmPlayer_0.10.min  -->
+    <style>
+      html, body {
+        margin: 0;
+        width: 100%;
+        height: 100%
+      }
+      body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+    </style>
+  </head>
+  <body>
+    <h3>Record video from webcam and transcode to mp4 (x264) and play!</h3>
+  <h3>录音转码为 mp4 (x264) 播放!</h3>
+    <div>
+      <video id="webcam" width="320px" height="180px"></video>
+      <video id="output-video" width="320px" height="180px" controls></video>
+    </div>
+    <button id="record" disabled>Start Recording</button>
+    <p id="message"></p>
+    <script>
+ 	  AppWasm.userAuth={"userId":'00000-1',"authKey":'******'};  //
+ 
+     AppWasm.init() ;  //导入AppWasm.player 
+ 	
+      const webcam = document.getElementById('webcam');
+      const recordBtn = document.getElementById('record');
+      const startRecording = () => {
+        const rec = new MediaRecorder(webcam.srcObject);
+        const chunks = [];
+        
+        recordBtn.textContent = 'Stop Recording';
+        recordBtn.onclick = () => {
+          rec.stop();
+          recordBtn.textContent = 'Start Recording';
+          recordBtn.onclick = startRecording;
+        }
+
+        rec.ondataavailable = e => chunks.push(e.data);
+        rec.onstop = async () => {
+          transcode(new Uint8Array(await (new Blob(chunks)).arrayBuffer()));
+        };
+        rec.start();
+      };
+
+      (async () => {
+        webcam.srcObject = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+        await webcam.play();
+        recordBtn.disabled = false;
+        recordBtn.onclick = startRecording;
+      })();
+
+     //转码播放
+      const transcode = async (webcamData) => {
+ 
+		const outData=await AppWasm.transCode(webcamData,'record.webm',"record_outPut.mp4"); //文件,任意名称,设置目标类型
+		
+		 const video = document.getElementById('output-video');
+        video.src = URL.createObjectURL(new Blob([outData.buffer], { type: 'video/mp4' }));
+		video.play(true);
+		
+      }
+ 
+ 
+	  
+	  
+	  
+	  
+    </script>
+  </body>
+</html>
