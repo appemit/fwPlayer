@@ -3,12 +3,12 @@
 	 需要延迟 转码的时间,内容小于1G ,或者分段
 	 
 ## 步骤
-###1  在服务器端增加反馈的 headers 
+###1  在服务器端增加反馈的 headers ：
 	   Cross-Origin-Embedder-Policy: require-corp 
 	   Cross-Origin-Opener-Policy: same-origin 
 
 ###2  在服务器端（Nginx、apache配置文件mime.types），增加MIME类型，以便支持Content-Type对应的wasm, 增加设置  	
-		  文件扩展名Extensions   内容类型 MIME type
+		  文件扩展名Extensions   内容类型 MIME type： 
 		  wasm   application/wasm
  
 ###3 引入js，配置userAuth 。
@@ -24,7 +24,7 @@ Support video and audio recording, transcoding and streaming transmission of var
 	   Cross-Origin-Opener-Policy: same-origin 
 
 ###2  On the server side (nginx, Apache configuration file mime. Types), add MIME types to support wasm corresponding to content type, and add settings
-File extensions    content type MIME type	
+File extensions    content type MIME type：	
  wasm   application/wasm
  
 ###3. Introduce JS and configure userauth.
