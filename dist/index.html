@@ -1,7 +1,7 @@
 <html>
   <head>
   
-    <script src="./fmPlayer_0.10.min.js"></script>
+    <script src="./fmPlayer_0.11.min.js"></script>
     <style>
       html, body {
         margin: 0;
@@ -23,7 +23,7 @@
     <button onClick="cancel()">Cancel</button>
 
     <script>
-	/*******************
+	/*******************  
 	fwPlayer 支持各种最新浏览器的视频和音频的录制、转码、流式传输。可以支持avi MP4(x264,x265) webm mpeg-1 mpeg-2, mp3 aac wav ogg flac,gif,srt ass等
 	 需要延迟 转码的时间,内容小于1G,或者分段
      步骤
@@ -44,14 +44,20 @@
 	  AppWasm.userAuth={"userId":'00000-1',"authKey":'******'};  //
 	 
 	// AppWasm.corePath='./core/ffmpeg-core.js';
- 
-      AppWasm.init() ;  //导入AppWasm.player 
+        var debug=true    //删除则没有log
+      AppWasm.init(debug) ;  //导入AppWasm.player 
  
       const transcode = async ({ target: { files } }) => {
   
         const video = document.getElementById('output-video');
-		const outData=await AppWasm.transCode(files[0],files[0].name,"outPut.wav"); //文件,文件名称,设置目标文件类型
-        video.src = URL.createObjectURL(new Blob([outData.buffer], { type: 'audio/wav' }));
+		//音频
+		//const outData=await AppWasm.transCode(files[0],files[0].name,"outPut.wav");   //文件,文件名称,设置目标文件类型   
+       // video.src = URL.createObjectURL(new Blob([outData.buffer], { type: 'audio/wav' }));
+		
+		//视频
+		const outData=await AppWasm.transCode(files[0],files[0].name,"outPut2.mp4");   //文件,文件名称,设置目标文件类型   视频 修改为  mp4  'video/mp4'
+        video.src = URL.createObjectURL(new Blob([outData.buffer], { type: 'video/mp4' }));
+		
 		video.play(true);
 		
       }
